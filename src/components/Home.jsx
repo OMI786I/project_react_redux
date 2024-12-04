@@ -46,7 +46,11 @@ const Home = () => {
               </div>
             </div>
 
-            <Button className="h-8 w-8 p-0" size="icon" variant="destructive">
+            <Button
+              className="h-8 w-8 p-0 bg-red-600 hover:bg-red-700 rounded-lg text-white"
+              size="icon"
+              variant="destructive"
+            >
               <Trash className="h-4 w-4" />
               <span className="sr-only">Delete task</span>
             </Button>
