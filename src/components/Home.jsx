@@ -12,7 +12,12 @@ import Swal from "sweetalert2";
 const Home = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  const { register, handleSubmit, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
   const [selectedTask, setSelectedTask] = useState(null);
   const [toggle, setToggle] = useState(false);
 
@@ -253,24 +258,40 @@ const Home = () => {
 
       {/* Add Task Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex gap-2">
-        <Input
-          className="flex-1"
-          placeholder="Add a title"
-          type="text"
-          {...register("title", { required: true })}
-        />
-        <Input
-          className="flex-1"
-          placeholder="Add a new task"
-          type="text"
-          {...register("task", { required: true })}
-        />
-        <Input
-          className="flex-1"
-          placeholder="Add a new task"
-          type="date"
-          {...register("date", { required: true })}
-        />
+        <div>
+          <Input
+            className="flex-1"
+            placeholder="Add a title"
+            type="text"
+            {...register("title", { required: true })}
+          />
+          {errors.title && (
+            <span className="text-red-600">Title is required</span>
+          )}
+        </div>
+        <div>
+          <Input
+            className="flex-1"
+            placeholder="Add a new task"
+            type="text"
+            {...register("task", { required: true })}
+          />
+          {errors.task && (
+            <span className="text-red-600">Task is required</span>
+          )}
+        </div>
+        <div>
+          <Input
+            className="flex-1"
+            placeholder="Add a new task"
+            type="date"
+            {...register("date", { required: true })}
+          />
+          {errors.date && (
+            <span className="text-red-600">Date is required</span>
+          )}
+        </div>
+
         <Button
           type="submit"
           className="bg-green-600 text-white hover:bg-green-700"
