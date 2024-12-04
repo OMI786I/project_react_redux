@@ -5,7 +5,7 @@ import { Pencil, Trash } from "lucide-react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { addTask, updateTask } from "@/TodoReducer";
+import { addTask, deleteTask, updateTask } from "@/TodoReducer";
 import { useState } from "react";
 
 const Home = () => {
@@ -35,6 +35,10 @@ const Home = () => {
     const filteredTask = task.find((t) => t.id === id);
     setSelectedTask(filteredTask);
     setIsOpen(true);
+  };
+
+  const handleDelete = (id) => {
+    dispatch(deleteTask({ id: id }));
   };
 
   const onSubmit2 = (e) => {
@@ -91,6 +95,7 @@ const Home = () => {
                     className="h-8 w-8 p-0 bg-red-600 hover:bg-red-700 rounded-lg text-white"
                     size="icon"
                     variant="destructive"
+                    onClick={() => handleDelete(task.id)}
                   >
                     <Trash className="h-4 w-4" />
                     <span className="sr-only">Delete task</span>
