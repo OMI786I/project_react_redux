@@ -10,8 +10,8 @@ const Root = () => {
         <SidebarNav />
         <main>
           <SidebarTrigger />
-          <Outlet />
         </main>
+        <Outlet />
       </SidebarProvider>
     </>
   );
