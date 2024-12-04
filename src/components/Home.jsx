@@ -2,21 +2,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const Home = () => {
-  const tasks = [
-    {
-      id: 1,
-      title: "Title1",
-      task: "jasdhasjdhasjkdhajhdajkhdjkahdjkahdjkahsdjkahdjkhajkdhajkshdjkahdjkahdjkhsadbajksdbajkshdajkhdjakshdjkahdjkahdjkahdjkahdkjhasdjkhakjhdkjahsd",
-    },
-    { id: 2, title: "Title2", task: "Task" },
-    {
-      id: 3,
-      title: "Tilte3",
-      task: "Task hdajshajkshdkjashiuwyeouaiodsjashdjaheuywoeuioasdjsahdiuwyeowuioajdsahdiuwyeowiueiosajdhiuwyeoiwueipasjdhsaiuryweiouajdjajheuiowaeipwajdsajhrueoeipwoauesajderhyoeiuapwiaojdsahduweyrwiaoeupsadjiarhyeuayioeuaisjdahrueayeiowuaeisajdahrueayiowaueipaosdjsahfueiyroiaueiapsdnjashrfueiyrioaueisajdahyroiawueipwaojdsaklhruoeiyipwaoueasjdnahroeuaipeupadj",
-    },
-  ];
+  const task = useSelector((state) => state.tasks);
+  console.log(task);
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -30,30 +20,37 @@ const Home = () => {
 
       {/* Task List */}
       <div className="space-y-4">
-        {tasks.map((task) => (
+        {task.map((task) => (
           <div
             key={task.id}
             className="flex items-start gap-4 border border-gray-200 dark:border-gray-700 p-4 rounded-md shadow-sm"
           >
-            <Checkbox id={`task-${task.id}`} />
-            <div className="flex flex-col w-full overflow-auto break-words p-2  border-gray-300">
-              {" "}
-              <div className=" font-bold">
-                <h1>{task.title}</h1>
-              </div>
-              <div className="">
-                <p>{task.task}</p>
-              </div>
-            </div>
-
-            <Button
-              className="h-8 w-8 p-0 bg-red-600 hover:bg-red-700 rounded-lg text-white"
-              size="icon"
-              variant="destructive"
-            >
-              <Trash className="h-4 w-4" />
-              <span className="sr-only">Delete task</span>
-            </Button>
+            {task.title === null && task.task === null ? (
+              <>
+                <p>Please add task</p>
+              </>
+            ) : (
+              <>
+                <Checkbox id={`task-${task.id}`} />
+                <div className="flex flex-col w-full overflow-auto break-words p-2  border-gray-300">
+                  {" "}
+                  <div className=" font-bold">
+                    <h1>{task.title}</h1>
+                  </div>
+                  <div className="">
+                    <p>{task.task}</p>
+                  </div>
+                </div>
+                <Button
+                  className="h-8 w-8 p-0 bg-red-600 hover:bg-red-700 rounded-lg text-white"
+                  size="icon"
+                  variant="destructive"
+                >
+                  <Trash className="h-4 w-4" />
+                  <span className="sr-only">Delete task</span>
+                </Button>
+              </>
+            )}
           </div>
         ))}
       </div>
