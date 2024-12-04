@@ -14,29 +14,9 @@ import {
 // Menu items.
 const items = [
   {
-    title: "Home",
+    title: "Tasks",
     url: "/",
     icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "/inbox",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
   },
 ];
 
