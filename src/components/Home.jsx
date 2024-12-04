@@ -6,7 +6,7 @@ import { Pencil, Trash } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addTask, deleteTask, toggleUpdate, updateTask } from "@/TodoReducer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -14,9 +14,33 @@ const Home = () => {
   const { register, handleSubmit, reset } = useForm();
   const [selectedTask, setSelectedTask] = useState(null);
   const [toggle, setToggle] = useState(false);
+
   const task = useSelector((state) => state.tasks);
   console.log(task);
-
+  const [filteredData, setFilteredData] = useState(task);
+  const handleFilter = (type) => {
+    switch (type) {
+      case "all":
+        setFilteredData(task);
+        break;
+      case "completed":
+        setFilteredData(task.filter((t) => t.completed === true));
+        break;
+      case "pending":
+        setFilteredData(task.filter((t) => t.completed === false));
+        break;
+      case "overdue":
+        setFilteredData(
+          task.filter((t) => new Date(t.date) < new Date() && !t.completed)
+        );
+        break;
+      default:
+        setFilteredData(task);
+    }
+  };
+  useEffect(() => {
+    setFilteredData(task);
+  }, [task]);
   const handleToggle = (id, status) => {
     const handlestatus = !status;
     console.log(id, handlestatus, toggle);
@@ -37,6 +61,7 @@ const Home = () => {
         id: newId,
         title: data.title,
         task: data.task,
+        date: data.date,
       })
     );
 
@@ -83,13 +108,45 @@ const Home = () => {
       </header>
 
       {/* Task List */}
-      {task.length != 0 ? <p className="font-bold">Completed</p> : ""}
+      {task.length != 0 ? (
+        <div className="flex justify-between">
+          <p className="font-bold">Completed</p>
+          <div className="dropdown">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-primary btn-sm m-1"
+            >
+              Sort
+            </div>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+            >
+              <li>
+                <a onClick={() => handleFilter("all")}>All Tasks</a>
+              </li>
+              <li>
+                <a onClick={() => handleFilter("completed")}>Completed Tasks</a>
+              </li>
+              <li>
+                <a onClick={() => handleFilter("pending")}>Pending Tasks</a>
+              </li>
+              <li>
+                <a onClick={() => handleFilter("overdue")}>Overdue Tasks</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
 
       <div className="space-y-4 border">
-        {task.length === 0 ? (
+        {filteredData.length == 0 ? (
           <p className="text-center my-5">Please add a task</p>
         ) : (
-          task.map((task) => (
+          filteredData.map((task) => (
             <div
               key={task.id}
               className="flex items-start justify-around gap-4 border border-gray-200 dark:border-gray-700 p-4 rounded-md shadow-sm"
@@ -105,6 +162,9 @@ const Home = () => {
                 </div>
                 <div>
                   <p>{task.task}</p>
+                </div>
+                <div>
+                  <p>{task.date}</p>
                 </div>
               </div>
               <div className="flex flex-col gap-2 ">
@@ -151,6 +211,12 @@ const Home = () => {
           placeholder="Add a new task"
           type="text"
           {...register("task", { required: true })}
+        />
+        <Input
+          className="flex-1"
+          placeholder="Add a new task"
+          type="date"
+          {...register("date", { required: true })}
         />
         <Button
           type="submit"
