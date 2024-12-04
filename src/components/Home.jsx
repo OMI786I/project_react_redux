@@ -5,7 +5,7 @@ import { Pencil, Trash } from "lucide-react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { addTask, deleteTask, updateTask } from "@/TodoReducer";
+import { addTask, deleteTask, toggleUpdate, updateTask } from "@/TodoReducer";
 import { useState } from "react";
 
 const Home = () => {
@@ -13,8 +13,21 @@ const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm();
   const [selectedTask, setSelectedTask] = useState(null);
+  const [toggle, setToggle] = useState(false);
   const task = useSelector((state) => state.tasks);
   console.log(task);
+
+  const handleToggle = (id, status) => {
+    const handlestatus = !status;
+    console.log(id, handlestatus, toggle);
+    dispatch(
+      toggleUpdate({
+        id: id,
+        completed: handlestatus,
+      })
+    );
+    console.log(task);
+  };
 
   const onSubmit = (data) => {
     const newId = task.length > 0 ? task[task.length - 1].id + 1 : 1;
@@ -70,6 +83,8 @@ const Home = () => {
       </header>
 
       {/* Task List */}
+      {task.length != 0 ? <p className="font-bold">Completed</p> : ""}
+
       <div className="space-y-4 border">
         {task.length === 0 ? (
           <p className="text-center my-5">Please add a task</p>
@@ -77,9 +92,13 @@ const Home = () => {
           task.map((task) => (
             <div
               key={task.id}
-              className="flex items-start gap-4 border border-gray-200 dark:border-gray-700 p-4 rounded-md shadow-sm"
+              className="flex items-start justify-around gap-4 border border-gray-200 dark:border-gray-700 p-4 rounded-md shadow-sm"
             >
-              <Checkbox id={`task-${task.id}`} />
+              <input
+                type="checkbox"
+                onChange={() => handleToggle(task.id, task.completed)}
+              />
+
               <div className="flex flex-col w-full overflow-auto break-words p-2 border-gray-300">
                 <div className="font-bold">
                   <h1>{task.title}</h1>

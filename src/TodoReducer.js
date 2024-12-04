@@ -7,7 +7,7 @@ const TodSlice = createSlice({
   initialState,
   reducers: {
     addTask: (state, action) => {
-      state.push(action.payload);
+      state.push({ ...action.payload, completed: false });
     },
     updateTask: (state, action) => {
       const { id, title, task } = action.payload;
@@ -24,7 +24,15 @@ const TodSlice = createSlice({
         return state.filter((f) => f.id !== id);
       }
     },
+    toggleUpdate: (state, action) => {
+      const { id, completed } = action.payload;
+      const task = state.find((t) => t.id === id);
+      if (task) {
+        task.completed = completed;
+      }
+    },
   },
 });
-export const { addTask, updateTask, deleteTask } = TodSlice.actions;
+export const { addTask, updateTask, deleteTask, toggleUpdate } =
+  TodSlice.actions;
 export default TodSlice.reducer;
