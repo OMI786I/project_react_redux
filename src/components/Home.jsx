@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addTask, deleteTask, toggleUpdate, updateTask } from "@/TodoReducer";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -88,7 +89,24 @@ const Home = () => {
   };
 
   const handleDelete = (id) => {
-    dispatch(deleteTask({ id: id }));
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteTask({ id: id }));
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your task has been deleted.",
+          icon: "success",
+        });
+      }
+    });
   };
 
   const onSubmit2 = (e) => {
