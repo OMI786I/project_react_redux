@@ -2,9 +2,34 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash } from "lucide-react";
-import { useSelector } from "react-redux";
+
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { addTask } from "@/TodoReducer";
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const {
+    register,
+    handleSubmit,
+    reset,
+
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => {
+    dispatch(
+      addTask({
+        id: task[task.length - 1].id + 1,
+        title: data.title,
+        task: data.task,
+      })
+    );
+
+    console.log(data);
+    reset();
+  };
+
   const task = useSelector((state) => state.tasks);
   console.log(task);
 
@@ -56,11 +81,19 @@ const Home = () => {
       </div>
 
       {/* Add Task Form */}
-      <form className="mt-6 flex gap-2">
-        <Input
-          className="flex-1"
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex gap-2">
+        <input
+          className="flex-1 border"
+          placeholder="Add a title"
+          type="text"
+          {...register("title")}
+          required
+        />
+        <input
+          className="flex-1 border"
           placeholder="Add a new task"
           type="text"
+          {...register("task")}
           required
         />
         <Button
