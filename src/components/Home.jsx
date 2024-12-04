@@ -9,18 +9,15 @@ import { addTask } from "@/TodoReducer";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const {
-    register,
-    handleSubmit,
-    reset,
+  const { register, handleSubmit, reset } = useForm();
 
-    formState: { errors },
-  } = useForm();
+  const task = useSelector((state) => state.tasks);
+  console.log(task);
 
   const onSubmit = (data) => {
     dispatch(
       addTask({
-        id: task[task.length - 1].id + 1,
+        id: task.length > 0 ? task[task.length - 1].id + 1 : 1,
         title: data.title,
         task: data.task,
       })
@@ -29,9 +26,6 @@ const Home = () => {
     console.log(data);
     reset();
   };
-
-  const task = useSelector((state) => state.tasks);
-  console.log(task);
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -44,57 +38,51 @@ const Home = () => {
       </header>
 
       {/* Task List */}
-      <div className="space-y-4">
-        {task.map((task) => (
-          <div
-            key={task.id}
-            className="flex items-start gap-4 border border-gray-200 dark:border-gray-700 p-4 rounded-md shadow-sm"
-          >
-            {task.title === null && task.task === null ? (
-              <>
-                <p>Please add task</p>
-              </>
-            ) : (
-              <>
-                <Checkbox id={`task-${task.id}`} />
-                <div className="flex flex-col w-full overflow-auto break-words p-2  border-gray-300">
-                  {" "}
-                  <div className=" font-bold">
-                    <h1>{task.title}</h1>
-                  </div>
-                  <div className="">
-                    <p>{task.task}</p>
-                  </div>
+      <div className="space-y-4 border">
+        {task.length == 0 ? (
+          <p className="text-center my-5">Please add a task</p>
+        ) : (
+          task.map((task) => (
+            <div
+              key={task.id}
+              className="flex items-start gap-4 border border-gray-200 dark:border-gray-700 p-4 rounded-md shadow-sm"
+            >
+              <Checkbox id={`task-${task.id}`} />
+              <div className="flex flex-col w-full overflow-auto break-words p-2 border-gray-300">
+                <div className="font-bold">
+                  <h1>{task.title}</h1>
                 </div>
-                <Button
-                  className="h-8 w-8 p-0 bg-red-600 hover:bg-red-700 rounded-lg text-white"
-                  size="icon"
-                  variant="destructive"
-                >
-                  <Trash className="h-4 w-4" />
-                  <span className="sr-only">Delete task</span>
-                </Button>
-              </>
-            )}
-          </div>
-        ))}
+                <div>
+                  <p>{task.task}</p>
+                </div>
+              </div>
+
+              <Button
+                className="h-8 w-8 p-0 bg-red-600 hover:bg-red-700 rounded-lg text-white"
+                size="icon"
+                variant="destructive"
+              >
+                <Trash className="h-4 w-4" />
+                <span className="sr-only">Delete task</span>
+              </Button>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Add Task Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex gap-2">
-        <input
-          className="flex-1 border"
+        <Input
+          className="flex-1"
           placeholder="Add a title"
           type="text"
-          {...register("title")}
-          required
+          {...register("title", { required: true })}
         />
-        <input
-          className="flex-1 border"
+        <Input
+          className="flex-1"
           placeholder="Add a new task"
           type="text"
-          {...register("task")}
-          required
+          {...register("task", { required: true })}
         />
         <Button
           type="submit"

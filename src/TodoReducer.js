@@ -1,12 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = [
-  {
-    id: 1,
-    title: null,
-    task: null,
-  },
-];
+const initialState = [];
 
 const TodSlice = createSlice({
   name: "task",
